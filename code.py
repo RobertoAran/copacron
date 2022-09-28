@@ -4,14 +4,31 @@ import pathlib
 import sys
 import shutil
 
+
+# def comparatorToDelete(origin, destination):
+#     i = 0
+#     with os.scandir(origin) as originFiles:
+#         with os.scandir(destination) as destinationFiles:
+#             if len(originFiles) != len(destinationFiles):
+#                 if len(originFiles) > len(destinationFiles):
+#                     for originFile in originFiles:
+#                         while
+#                 else:
+
 def createDir(destination):
     os.mkdir(destination)
+
 
 def copyFile(origin, destination):
     shutil.copy(origin, destination)
 
+
 def createFile(origin, destination):
     shutil.copy(origin, destination)
+
+
+def scanDestinyDelete():
+    print("deleted")
 
 
 def hash_file(filename):
@@ -23,8 +40,6 @@ def hash_file(filename):
             h.update(chunk)
     return h.hexdigest()
 
-def scanDestinyDelete():
-    print("deleted")
 
 def scanDestiny(destination, is_file):
     if os.path.exists(destination):
@@ -33,32 +48,37 @@ def scanDestiny(destination, is_file):
         return "dir"
     return "none"
 
-# Scan original route file per file
-# call to scanDestiny to comprobate if the file or dir are in the destiny or not
-# Recolect hash of origin file and destiny file and if is necesary send to copyFile
-def scanOrigin(origin, destiny):
-    with os.scandir(origin) as ficheros:
-        actualSize = len(ficheros)
-        for fichero in ficheros:
-            origin = origin + '/' + fichero.name
-            destination = destination + '/' + fichero.name
-            if fichero.is_file():
-                response = scanDestiny(destination, True)
-                if response != "none" and hash_file(origin) != response:
-                    copyFile(origin, destination)
+
+def scanOrigin(original, destiny):
+    print(original, destiny)
+    if os.path.isdir(original):
+        with os.scandir(original) as ficheros:
+            # comparatorToDelete(origin, destiny)
+            for fichero in ficheros:
+                origin = original + '/' + fichero.name
+                destination = destiny + '/' + fichero.name
+                if fichero.is_file():
+                    response = scanDestiny(destination, True)
+                    if response != "none" and hash_file(origin) != response:
+                        copyFile(origin, destiny)
+                    else:
+                        createFile(origin, destiny)
                 else:
-                    createFile(origin, destination)
-            else:
-                response = scanDestiny(destination, False)
-                if response == "dir":
-                    scanOrigin(origin, destiny)
-                else:
-                    createDir(destination)
-                    scanOrigin(origin, destiny)
+                    if fichero.is_dir():
+                        response = scanDestiny(destination, False)
+                        if response == "dir":
+                            scanOrigin(origin, destination)
+                        else:
+                            createDir(destination)
+                            scanOrigin(origin, destination)
+    print("bucles terminados")
+
 
 if __name__ == '__main__':
     # arguments = sys.argv[1:]
     arguments = ['/home/roberto/PycharmProjects/Crontab', '/home/roberto/PycharmProjects/Cronta']
     origin = arguments[0]
     destiny = arguments[1]
+    if not os.path.isdir(destiny):
+        createDir(destiny)
     scanOrigin(origin, destiny)
