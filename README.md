@@ -7,8 +7,9 @@ instructions for use
     - origin directory  
     - copy folder  
     - LOG PATH  
-    The execution command should look like this: 0 0 4 (Path to origin) (Path to copy) (Log path)  
+    The execution command should look like this:python script.py 1 1 4 (Path to origin) (Path to copy) (Log path)  
+    The log autocatch the actual data to get her name, dont change the name
 
 Requeriments.  
   -Linux system or cron installed.  
-  -Python-crontab.  
+  -Python-crontab installed via pip.  
