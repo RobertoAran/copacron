@@ -2,8 +2,8 @@ from crontab import CronTab
 import sys
 
 
-def cron():
-    arguments = sys.argv[1:]
+def cron(arguments):
+
     my_cron = CronTab(user=True)
     commandFin = 'python code.py' + ' ' + arguments[3] + ' ' + arguments[4] + ' ' + arguments[5]
     job = my_cron.new(command=commandFin)
@@ -15,4 +15,5 @@ def cron():
 
 
 if __name__ == '__main__':
-    cron()
+    arguments = sys.argv[1:]
+    cron(arguments)
