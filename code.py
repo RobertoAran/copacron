@@ -1,9 +1,8 @@
 import hashlib
 import os
-import pathlib
-import sys
 import shutil
-
+import sys
+from datetime import date
 
 # def comparatorToDelete(origin, destination):
 #     i = 0
@@ -15,20 +14,62 @@ import shutil
 #                         while
 #                 else:
 
+logRoute = ""
+
+
+def Log(write):
+    print(write)
+    time = str(date.today())
+    file = open(logRoute + "/" + time + ".log", "a")
+    file.write(write)
+    file.close()
+
+
+def deleteDir(destination):
+    shutil.rmtree(destination)
+    text = "Directory deleted: " + destination
+    Log(text)
+
+
+def deleteFile(destination):
+    os.remove(destination)
+    text = "File deleted: " + destination
+    Log(text)
+
+
 def createDir(destination):
     os.mkdir(destination)
+    text = 'Directory created: ' + destination
+    Log(text)
 
 
 def copyFile(origin, destination):
     shutil.copy(origin, destination)
+    text = 'File replaced: ' + destination
+    Log(text)
 
 
 def createFile(origin, destination):
     shutil.copy(origin, destination)
+    text = 'File created: ' + destination
+    Log(text)
 
 
-def scanDestinyDelete():
-    print("deleted")
+def scanDestinyDelete(origin, destiny):
+    originFileArray = []
+    with os.scandir(origin) as originFiles:
+        with os.scandir(destiny) as destinationFiles:
+
+            for originFile in originFiles:
+                originFileArray.append(originFile.name)
+
+            for destinationFile in destinationFiles:
+                if destinationFile.name not in originFileArray:
+                    removeThis = destiny + '/' + destinationFile.name
+                    if os.path.isdir(removeThis):
+                        deleteDir(removeThis)
+                    else:
+                        deleteFile(removeThis)
 
 
 def hash_file(filename):
@@ -50,10 +91,9 @@ def scanDestiny(destination, is_file):
 
 
 def scanOrigin(original, destiny):
-    print(original, destiny)
     if os.path.isdir(original):
+        scanDestinyDelete(original, destiny)
         with os.scandir(original) as ficheros:
-            # comparatorToDelete(origin, destiny)
             for fichero in ficheros:
                 origin = original + '/' + fichero.name
                 destination = destiny + '/' + fichero.name
@@ -61,7 +101,7 @@ def scanOrigin(original, destiny):
                     response = scanDestiny(destination, True)
                     if response != "none" and hash_file(origin) != response:
                         copyFile(origin, destiny)
-                    else:
+                    if response == "none":
                         createFile(origin, destiny)
                 else:
                     if fichero.is_dir():
@@ -71,14 +111,13 @@ def scanOrigin(original, destiny):
                         else:
                             createDir(destination)
                             scanOrigin(origin, destination)
-    print("bucles terminados")
 
 
 if __name__ == '__main__':
-    # arguments = sys.argv[1:]
-    arguments = ['/home/roberto/PycharmProjects/Crontab', '/home/roberto/PycharmProjects/Cronta']
+    arguments = sys.argv[1:]
     origin = arguments[0]
     destiny = arguments[1]
+    logRoute = arguments[2]
     if not os.path.isdir(destiny):
         createDir(destiny)
     scanOrigin(origin, destiny)
