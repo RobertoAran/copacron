@@ -1,3 +1,4 @@
+import os
 import pathlib
 import sys
 
@@ -12,10 +13,13 @@ def cron(arguments):
     job.hour.every(arguments[1])
     job.day.every(arguments[2])
 
-    try:
-        my_cron.write()
-    except:
-        print("you dont have put valid values")
+    if os.path.isdir(arguments[3]) and os.path.isdir(arguments[5]):
+        try:
+            my_cron.write()
+        except:
+            print("you dont have put valid values")
+    else:
+        print("you need to put a valid origin route or the log file route dont are a directory")
 
 if __name__ == '__main__':
     arguments = sys.argv[1:]
