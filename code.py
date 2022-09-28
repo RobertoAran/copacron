@@ -1,5 +1,6 @@
 import hashlib
 import os
+import pathlib
 import sys
 import shutil
 
@@ -14,16 +15,26 @@ def hash_file(filename):
     return h.hexdigest()
 
 
-def scandir(arguments):
-    with os.scandir(arguments) as ficheros:
+def scanDestiny(destiniDir):
+    if os.path.exists(destiniDir):
+        if destiniDir.is_file():
+            return hash_file(destiniDir)
+        return "dir"
+    return "none"
+
+
+def scanOrigin(arguments, actualRute):
+    with os.scandir(arguments[0]) as ficheros:
         for fichero in ficheros:
+            originDir = arguments[0] + '/' + fichero.name
+            destiniDir = arguments[1] + '/' + fichero.name
             if fichero.is_file():
-                print(fichero.name)
+                scanDestiny()
             if fichero.is_dir():
-                nameCarpet = arguments + '/' + fichero.name
-                scandir(nameCarpet)
+                scanOrigin(destiniDir)
+
 
 if __name__ == '__main__':
     # arguments = sys.argv[1:]
-    arguments = '/home/roberto/PycharmProjects/Crontab'
-    scandir(arguments)
+    arguments = ['/home/roberto/PycharmProjects/Crontab', '/home/roberto/PycharmProjects/Cronta']
+    scanOrigin(arguments)
