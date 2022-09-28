@@ -4,16 +4,6 @@ import shutil
 import sys
 from datetime import date
 
-# def comparatorToDelete(origin, destination):
-#     i = 0
-#     with os.scandir(origin) as originFiles:
-#         with os.scandir(destination) as destinationFiles:
-#             if len(originFiles) != len(destinationFiles):
-#                 if len(originFiles) > len(destinationFiles):
-#                     for originFile in originFiles:
-#                         while
-#                 else:
-
 logRoute = ""
 
 
@@ -54,7 +44,8 @@ def createFile(origin, destination):
     text = 'File created: ' + destination
     Log(text)
 
-
+# this function checks if the files in the destination folder are the same as in the original folder, and deletes
+# the excess files.
 def scanDestinyDelete(origin, destiny):
     originFileArray = []
     with os.scandir(origin) as originFiles:
@@ -71,7 +62,7 @@ def scanDestinyDelete(origin, destiny):
                     else:
                         deleteFile(removeThis)
 
-
+# This function takes care of creating a hash of the files passed to it, and returns the hash.
 def hash_file(filename):
     h = hashlib.sha1()
     with open(filename, 'rb') as file:
@@ -81,7 +72,8 @@ def hash_file(filename):
             h.update(chunk)
     return h.hexdigest()
 
-
+# This function checks if the file checked in the original file exists in the destination, it returns a hash,
+# "dir" or nothing.
 def scanDestiny(destination, is_file):
     if os.path.exists(destination):
         if is_file:
@@ -89,7 +81,8 @@ def scanDestiny(destination, is_file):
         return "dir"
     return "none"
 
-
+# This function is in charge of scanning the source directory and sending it to the functions in charge of
+# deleting/changing/creating as well as to those in charge of checking if it is in the copy directory.
 def scanOrigin(original, destiny):
     if os.path.isdir(original):
         scanDestinyDelete(original, destiny)
@@ -113,6 +106,7 @@ def scanOrigin(original, destiny):
                             scanOrigin(origin, destination)
 
 
+# Main function in charge of starting the processes and creating the copy base directory.
 if __name__ == '__main__':
     arguments = sys.argv[1:]
     origin = arguments[0]
