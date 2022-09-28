@@ -1,11 +1,12 @@
-from crontab import CronTab
+import pathlib
 import sys
 
+from crontab import CronTab
 
 def cron(arguments):
 
     my_cron = CronTab(user=True)
-    commandFin = 'python code.py' + ' ' + arguments[3] + ' ' + arguments[4] + ' ' + arguments[5]
+    commandFin = 'python' + ' ' + str(pathlib.Path().resolve()) + '/' + 'code.py' + ' ' + arguments[3] + ' ' + arguments[4] + ' ' + arguments[5]
     job = my_cron.new(command=commandFin)
     job.minute.every(arguments[0])
     job.hour.every(arguments[1])
