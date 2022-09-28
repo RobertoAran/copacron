@@ -12,8 +12,10 @@ def cron(arguments):
     job.hour.every(arguments[1])
     job.day.every(arguments[2])
 
-    my_cron.write()
-
+    try:
+        my_cron.write()
+    except:
+        print("you dont have put valid values")
 
 if __name__ == '__main__':
     arguments = sys.argv[1:]
