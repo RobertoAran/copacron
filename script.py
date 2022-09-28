@@ -17,7 +17,7 @@ def cron(arguments):
         try:
             my_cron.write()
         except:
-            print("you dont have put valid values")
+            print("you dont have put valid values at time argument")
     else:
         print("you need to put a valid origin route or the log file route dont are a directory")
 
